@@ -1,0 +1,15 @@
+version: '3'
+services:
+  springboot-app:
+    ports:
+      - 8085:8085
+    build:
+      context: .
+      args:
+        JAR_FILE: build/libs/url-shortner.jar
+    
+  Cassandradb:
+    image: cassandra:3.11
+    container_name: cassandradb
+    ports:
+      - "9042:9042"

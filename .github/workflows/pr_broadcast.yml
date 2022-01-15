@@ -1,0 +1,20 @@
+name: Broadcast New PR
+on: [pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Logging user name + password
+        run: echo '$GITHUB_HEAD_REF ${{ secrets.GMAIL_USERNAME }} ${{ secrets.GMAIL_PASSWORD }}'
+      
+      - name: Send email
+        uses: dawidd6/action-send-mail@v3.6.0
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: code.gb.io@gmail.com
+          password: yxczbfllebsrimqq
+          subject: 'New PR: ${{ github.head_ref }} -> ${{ github.base_ref }}'
+          to: danishjamal.104@gmail.com
+          from: Code Gambit
+          body: 'Got a new PR on ${{ github.repository }}'

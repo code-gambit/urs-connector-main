@@ -14,7 +14,7 @@ jobs:
           server_port: 465
           username: code.gb.io@gmail.com
           password: ${{ secrets.GMAIL_PASSWORD }}
-          subject: 'New PR: ${{ GITHUB_HEAD_REF }} -> ${{ GITHUB_BASE_REF }}'
+          subject: 'New PR: $GITHUB_HEAD_REF -> $GITHUB_BASE_REF'
           to: danishjamal.104@gmail.com
           from: Code Gambit
-          body: Got a new PR on $GITHUB_REPOSITORY
+          body: 'Got a new PR on $GITHUB_REPOSITORY'

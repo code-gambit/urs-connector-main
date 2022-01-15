@@ -1,0 +1,18 @@
+name: Broadcast New PR
+on: [pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send email
+        uses: dawidd6/action-send-mail@v3.6.0
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{secrets.GMAIL_USERNAME}}
+          password: ${{secrets.GMAIL_PASSWORD}}
+          subject: 'New PR: $GITHUB_HEAD_REF -> $GITHUB_BASE_REF'
+          to: danishjamal.104@gmail.com
+          from: Code Gambit
+          secure: true
+          body: Got a new PR on $GITHUB_REPOSITORY

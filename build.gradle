@@ -1,0 +1,33 @@
+plugins {
+	id 'org.springframework.boot' version '2.3.4.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+	id 'com.palantir.docker' version '0.22.1'
+
+}
+
+
+repositories {
+	mavenCentral()
+}
+docker {
+	name "url-shortner"
+	dockerfile file('Dockerfile')
+	copySpec.from(jar).rename(".*","url-shortner.jar")
+	buildArgs(['JAR_FILE': "url-shortner.jar"])
+}
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-cassandra'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-tomcat', version: '1.2.1.RELEASE'
+    implementation 'org.projectlombok:lombok:1.18.20'
+	implementation 'org.springframework.boot:spring-boot-starter-parent:2.6.2'
+	implementation 'org.springframework.boot:spring-boot-starter:2.6.2'
+	implementation 'org.springframework:spring-core:5.3.13'
+	implementation group: 'com.datastax.cassandra', name: 'cassandra-driver-core', version: '3.6.0'
+	implementation group: 'javax.persistence', name: 'javax.persistence-api', version: '2.2'
+}
+
+test {
+	useJUnitPlatform()
+}

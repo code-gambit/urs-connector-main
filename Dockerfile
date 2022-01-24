@@ -1,5 +1,4 @@
-FROM openjdk:11
-VOLUME /tmp
-ARG JAR_FILE
-COPY ${JAR_FILE} url-shortner.jar
-ENTRYPOINT ["java", "-jar", "url-shortner.jar"]
+FROM openjdk:15
+
+COPY build/libs/*.jar ./
+CMD java -jar *.jar

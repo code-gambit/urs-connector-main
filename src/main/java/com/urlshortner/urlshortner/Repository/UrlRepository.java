@@ -21,8 +21,4 @@ public interface UrlRepository extends CassandraRepository<UrlModel, Long> {
     @AllowFiltering
     int countUrlModelByShortUrl(String urlId);
 
-    @AllowFiltering
-    @Query(value = "Select max(id) From url_table")
-    long getMaxId();
-
 }

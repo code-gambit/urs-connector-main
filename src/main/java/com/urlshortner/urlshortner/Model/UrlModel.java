@@ -1,27 +1,30 @@
 package com.urlshortner.urlshortner.Model;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
-import org.springframework.data.cassandra.core.mapping.CassandraType;
-import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
-import org.springframework.data.cassandra.core.mapping.Table;
 
+import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
+import org.springframework.data.cassandra.core.mapping.*;
 import java.io.Serializable;
 
-@Table("URL_Table")
-@NoArgsConstructor
+@Table("URL_TABLE")
 public class UrlModel implements Serializable {
 
-    @PrimaryKeyColumn(ordinal = 0,type = PrimaryKeyType.PARTITIONED,name = "id")
-    @CassandraType(type = CassandraType.Name.BIGINT)
-    private Long id;
+    @PrimaryKeyColumn(value = "SHORT_URL", type = PrimaryKeyType.PARTITIONED)
+    @CassandraType(type = CassandraType.Name.VARCHAR)
+    private String shortUrl;
 
-    public Long getId() {
-        return id;
-    }
+    @Column(value = "LONG_URL")
+    @CassandraType(type = CassandraType.Name.VARCHAR)
+    private String longUrl;
 
-    public void setId(Long id) {
-        this.id = id;
+    @Column(value = "TIMESTAMP")
+    @CassandraType(type = CassandraType.Name.TIMESTAMP)
+    private Long timestamp;
+
+    public UrlModel() {}
+
+    public UrlModel(String shortUrl, String longUrl, Long timestamp) {
+        this.shortUrl = shortUrl;
+        this.longUrl = longUrl;
+        this.timestamp = timestamp;
     }
 
     public String getShortUrl() {
@@ -34,19 +37,46 @@ public class UrlModel implements Serializable {
 
     public String getLongUrl() {
         return longUrl;
-
     }
 
     public void setLongUrl(String longUrl) {
         this.longUrl = longUrl;
     }
 
-    private String shortUrl;
-    private String longUrl;
-
-    public UrlModel(Long id,String shortUrl, String longUrl) {
-        this.id=id;
-        this.shortUrl = shortUrl;
-        this.longUrl = longUrl;
+    public Long getTimestamp() {
+        return timestamp;
     }
+
+    public void setTimestamp(Long timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public static class Builder {
+
+        private String shortUrl;
+        private String longUrl;
+
+        public Builder shortUrl(String shortUrl) {
+            this.shortUrl = shortUrl;
+            return this;
+        }
+
+        public Builder longUrl(String longUrl) {
+            this.longUrl = longUrl;
+            return this;
+        }
+
+        public UrlModel build() {
+            if(this.shortUrl == null || this.shortUrl.isEmpty()) {
+                throw new NullPointerException("Short url can't be null");
+            }
+            if(this.longUrl == null || this.longUrl.isEmpty()) {
+                throw new NullPointerException("Long url can't be null");
+            }
+            UrlModel object = new UrlModel(shortUrl, longUrl, System.currentTimeMillis());
+            return object;
+        }
+
+    }
+
 }

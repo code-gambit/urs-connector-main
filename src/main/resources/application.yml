@@ -4,6 +4,9 @@ server:
 spring:
   data:
     cassandra:
-      keyspace-name: url-space
-      contact-points: 0.0.0.0
+      keyspace-name: urlspace
+      contact-points: 127.0.0.1
       port: 9042
+      username: admin
+      password: password
+      local-datacenter: datacenter1

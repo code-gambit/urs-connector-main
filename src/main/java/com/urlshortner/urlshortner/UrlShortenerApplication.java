@@ -8,13 +8,5 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 @EnableDiscoveryClient
 public class UrlShortenerApplication {
 
-	public static void main(String[] args) {
-		try {
-			SpringApplication.run(UrlShortenerApplication.class, args);
-		}
-		catch (Exception e){
-			e.printStackTrace();
-		}
-	}
-
+	public static void main(String[] args){SpringApplication.run(UrlShortenerApplication.class, args);}
 }

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import org.apache.curator.x.discovery.ServiceInstance;
 import org.springframework.cloud.zookeeper.discovery.ZookeeperInstance;
 
-
+// This class Maps the client with related metadata about the client. Here client refers to the zooKeeper client.
 public class ServiceInstanceMapper {
     ZookeeperInstance payload;
     private String serviceInstanceName;

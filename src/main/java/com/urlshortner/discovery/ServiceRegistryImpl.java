@@ -11,6 +11,9 @@ import org.springframework.cloud.zookeeper.discovery.ZookeeperInstance;
 import java.util.Collection;
 import java.util.Optional;
 
+/*Implementation of Serviceregistry interface. This class provides methods to connect with zooKeeper server.
+After connection is established, a zookeeper instance is returned and is mapped by using ServiceInstanceMapper class.
+ */
 public class ServiceRegistryImpl implements Serviceregistry {
 
     CuratorFramework curatorFramework;

@@ -31,8 +31,9 @@ Once you are able to complete the above requirement setup. You can follow below 
     * Command: `git clone https://github.com/code-gambit/urs-connector-main.git`
     * Direct Download: [urs-connector-main](https://github.com/code-gambit/urs-connector-main/archive/refs/heads/master.zip).
 2. Open and wait for the project to be setup in `IntelliJ IDEA`.
-3. To start the application open the terminal in the project path and run the below command.
-    * Boot Application: `./gradlew bootJar`
+3. To start the application open the terminal in the project path and run the below commands.
+    * Compile Application: `./gradlew bootJar`
+    * Boot Application: `java -jar build/libs/url-shortner.jar `
 
 ## Contributing
 DISCLAIMER: Make sure not to force push untill unavoidable.

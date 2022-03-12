@@ -1,5 +1,6 @@
 package com.urlshortner.discovery;
 
+import org.apache.zookeeper.ZooKeeper;
 import org.apache.commons.lang.StringUtils;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.x.discovery.ServiceDiscovery;
@@ -23,7 +24,6 @@ public class ServiceRegistryImpl implements Serviceregistry {
     public ServiceRegistryImpl(CuratorFramework curatorFramework,
                                ZookeeperDiscoveryProperties zookeeperDiscoveryProperties) {
         this.curatorFramework = curatorFramework;
-
         this.zookeeperDiscoveryProperties = zookeeperDiscoveryProperties;
         this.serviceDiscovery = ServiceDiscoveryBuilder.builder(ZookeeperInstance.class).client(curatorFramework)
                 .basePath(zookeeperDiscoveryProperties.getRoot()).build();

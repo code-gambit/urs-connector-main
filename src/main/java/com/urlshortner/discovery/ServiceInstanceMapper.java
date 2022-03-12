@@ -12,6 +12,7 @@ public class ServiceInstanceMapper {
 
     public ServiceInstanceMapper(ServiceInstance<ZookeeperInstance> zookeeperInstance){
         //System.out.println(zookeeperInstance);
+
         this.serviceInstanceId=zookeeperInstance.getId();
         System.out.println(this.serviceInstanceId);
         this.serviceInstanceName = zookeeperInstance.getName();
@@ -28,5 +29,9 @@ public class ServiceInstanceMapper {
 
     public String getServiceInstanceId() {
         return serviceInstanceId;
+    }
+
+    public void readCounter(){
+
     }
 }

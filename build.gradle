@@ -6,7 +6,6 @@ plugins {
 
 }
 
-
 ext {
 	set('springCloudVersion', "2021.0.2-SNAPSHOT")
 }
@@ -22,6 +21,12 @@ docker {
 	copySpec.from(jar).rename(".*","url-shortner.jar")
 	buildArgs(['JAR_FILE': "url-shortner.jar"])
 }
+
+compileJava {
+	sourceCompatibility=JavaVersion.VERSION_15
+	targetCompatibility=JavaVersion.VERSION_15
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-cassandra'
 	implementation 'org.springframework.cloud:spring-cloud-starter-zookeeper-discovery'

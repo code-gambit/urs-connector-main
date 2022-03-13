@@ -1,6 +1,6 @@
 # urs-connector-main
-![Android](https://img.shields.io/badge/Spring-3DDC84?style=for-the-badge&logo=spring&logoColor=white) [![Slack](https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white)](https://join.slack.com/t/codegambit/shared_invite/zt-pe1nuhbk-iPuFm2B1JuMS86od4a4wXQ) [![License](https://img.shields.io/badge/License-APACHE-lightgrey.svg?style=for-the-badge)](https://github.com/code-gambit/urs-connector-main/blob/master/LICENSE) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/code-gambit/VT-AndroidClient?style=for-the-badge) <br>
-[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/code-gambit/urs-connector-main/Build%20Test?style=for-the-badge)](https://github.com/code-gambit/VT-AndroidClient/actions/workflows/build.yml) ![Java](https://img.shields.io/badge/Java-0095D5?&style=for-the-badge&logo=Java&logoColor=white) [![GitHub last commit](https://img.shields.io/github/last-commit/code-gambit/urs-connector-main?style=for-the-badge)](https://github.com/code-gambit/VT-AndroidClient/commits)
+![Android](https://img.shields.io/badge/Spring-3DDC84?style=for-the-badge&logo=spring&logoColor=white) [![Slack](https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white)](https://join.slack.com/t/codegambit/shared_invite/zt-pe1nuhbk-iPuFm2B1JuMS86od4a4wXQ) [![License](https://img.shields.io/badge/License-APACHE-lightgrey.svg?style=for-the-badge)](https://github.com/code-gambit/urs-connector-main/blob/master/LICENSE) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/code-gambit/urs-connector-main?style=for-the-badge) <br>
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/code-gambit/urs-connector-main/Build%20Test?style=for-the-badge)](https://github.com/code-gambit/urs-connector-main/actions/workflows/build_test.yml) ![Java](https://img.shields.io/badge/Java-0095D5?&style=for-the-badge&logo=Java&logoColor=white) [![GitHub last commit](https://img.shields.io/github/last-commit/code-gambit/urs-connector-main?style=for-the-badge)](https://github.com/code-gambit/urs-connector-main/commits)
 
 ## Project Description
 This is the microservice for the URL-Shortener application. It is the main entry point to the entire url-shortener BaaS(Backend As A Service). A spring based java application ready to be deployed in kubernetes. Below are some of the features of this microservice.
@@ -31,8 +31,9 @@ Once you are able to complete the above requirement setup. You can follow below 
     * Command: `git clone https://github.com/code-gambit/urs-connector-main.git`
     * Direct Download: [urs-connector-main](https://github.com/code-gambit/urs-connector-main/archive/refs/heads/master.zip).
 2. Open and wait for the project to be setup in `IntelliJ IDEA`.
-3. To start the application open the terminal in the project path and run the below command.
-    * Boot Application: `./gradlew bootJar`
+3. To start the application open the terminal in the project path and run the below commands.
+    * Compile Application: `./gradlew bootJar`
+    * Boot Application: `java -jar build/libs/url-shortner.jar `
 
 ## Contributing
 DISCLAIMER: Make sure not to force push untill unavoidable.

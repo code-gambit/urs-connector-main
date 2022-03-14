@@ -1,77 +1,79 @@
 package com.urlshortner.zooKeeper;
 
-import org.apache.zookeeper.*;
-import org.apache.zookeeper.data.ACL;
-import org.apache.zookeeper.data.Stat;
-import org.apache.zookeeper.server.watch.IWatchManager;
 
+import org.apache.zookeeper.*;
+import org.apache.zookeeper.data.Stat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 
 
 public class ZooKeeperClient {
+    Logger logger= LoggerFactory.getLogger(getClass());
     // create static instance for zookeeper class.
     private static ZooKeeper _zk;
     private String _clientId;
-    private int numberOfActiveClients;
-
+    private int LIMIT;
+    private int RangeStartVal=0;
     // create static instance for ZooKeeperConnection class.
     private static ZooKeeperConnection conn;
+
+    public void setRangeStartVal(int rangeStartVal) {
+        RangeStartVal = rangeStartVal;
+    }
+
+    public void setLIMIT(int LIMIT) {
+        this.LIMIT = LIMIT;
+    }
 
     Watcher testWatcher=new Watcher() {
         @Override
         public void process(WatchedEvent event) {
             if(event.getType()== Event.EventType.NodeChildrenChanged){
-                System.out.println("****************** Watcher Start *********************");
-
+                logger.info("****************** Watcher Start *********************");
                 try {
-                    System.out.println("Watcher applied on client "+_clientId);
+                    logger.info("Watcher applied on client "+_clientId);
                     testAndSet();
 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                System.out.println("****************** Watcher End *********************");
+                logger.info("****************** Watcher End *********************");
             }
         }
     };
 
-    public void createZooKeeperClient() {
+    public ZooKeeperClient(String host,int _limit) { //limit set the number of unique ids that the client will receive
+        this.LIMIT=_limit;
         try {
-            conn = new ZooKeeperConnection();
-            _zk = conn.connect("localhost");
-            numberOfActiveClients++;
-
-            _clientId = _zk.create("/counter/client", null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
-            List<String> children = _zk.getChildren("/counter", false);
-            Collections.sort(children);
-            if(_clientId.equals("/counter/"+children.get(0))){
-                System.out.println("--------------------------------------");
-                System.out.println(children);
-                System.out.println(_clientId);
-                //counter update read write
-                System.out.println("--------------------------------------");
-                conn.close();
-            }
-            else {
-                _zk.register(testWatcher);
-            }
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage()); //Catch error message
+            conn=new ZooKeeperConnection();
+            _zk=conn.connect(host);
+        } catch (Exception e){
+            e.printStackTrace();
         }
+    }
+
+    private static Stat znode_exists(String path) throws
+            KeeperException,InterruptedException {
+        return _zk.exists(path, true);
     }
 
     private void testAndSet() throws InterruptedException, KeeperException {
         List<String> children = _zk.getChildren("/counter", false);
         Collections.sort(children);
         if(_clientId.equals("/counter/"+children.get(0))){
-            System.out.println("######################################");
-            System.out.println(children);
-            System.out.println(_clientId);
-            //Perform getting the counter and incrementing it
+            logger.info("######################################");
+            logger.info(_clientId);
 
-            System.out.println("######################################");
+            byte[] data = _zk.getData("/counter", false, null);
+            int currRange= Integer.parseInt(new String(data));
+
+            byte[] updatedRange = String.valueOf(currRange+LIMIT).getBytes(StandardCharsets.UTF_8);
+            _zk.setData("/counter",updatedRange,_zk.exists("/counter",true).getVersion());
+            setRangeStartVal(currRange);
+            logger.info("######################################");
             conn.close();
         }
         else {
@@ -79,11 +81,20 @@ public class ZooKeeperClient {
         }
     }
 
-    public static void main(String[] args) {
-        ZooKeeperClient zkObj= new ZooKeeperClient();
-        ZooKeeperClient zkObj1= new ZooKeeperClient();
-        ZooKeeperClient zkObj2= new ZooKeeperClient();
-        for (int i=0;i<6;i++)
-            zkObj.createZooKeeperClient();
+
+    //Call this method to get the starting value of range for the client
+    public int getRangeForClient() throws InterruptedException, KeeperException {
+        _clientId = _zk.create("/counter/client", null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
+        testAndSet();
+        while (true){
+            Stat stat=znode_exists(_clientId);
+            if(stat==null){
+                break;
+            }
+        }
+        return RangeStartVal;
     }
+
 }
+
+

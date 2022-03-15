@@ -12,8 +12,6 @@ ext {
 
 repositories {
 	mavenCentral()
-	maven { url 'https://repo.spring.io/milestone' }
-	maven { url 'https://repo.spring.io/snapshot' }
 }
 docker {
 	name "url-shortner"
@@ -29,7 +27,7 @@ compileJava {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-cassandra'
-	implementation 'org.springframework.cloud:spring-cloud-starter-zookeeper-discovery'
+	implementation 'org.apache.zookeeper:zookeeper:3.8.0'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-tomcat', version: '1.2.1.RELEASE'
     implementation 'org.projectlombok:lombok:1.18.20'
@@ -40,11 +38,6 @@ dependencies {
 	implementation group: 'javax.persistence', name: 'javax.persistence-api', version: '2.2'
 }
 
-dependencyManagement {
-	imports {
-		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-	}
-}
 
 test {
 	useJUnitPlatform()

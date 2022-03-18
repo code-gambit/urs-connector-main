@@ -2,8 +2,6 @@ package com.urlshortner.urlshortner.Controller;
 
 import com.urlshortner.urlshortner.Service.UrlService;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
-
 import java.util.HashMap;
 import java.util.Map;
 

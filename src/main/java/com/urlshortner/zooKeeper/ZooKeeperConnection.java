@@ -1,31 +1,39 @@
 package com.urlshortner.zooKeeper;
 
-// import java classes
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
-
-// import zookeeper classes
-import org.apache.zookeeper.WatchedEvent;
-import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.Watcher.Event.KeeperState;
 import org.apache.zookeeper.ZooKeeper;
 
-
+/**
+ * Public class for managing ZooKeeper connection
+ */
 public class ZooKeeperConnection {
 
-    // declare zookeeper instance to access ZooKeeper ensemble
+    private String host;
     private ZooKeeper zoo;
     final CountDownLatch connectedSignal = new CountDownLatch(1);
 
-    // Method to connect zookeeper ensemble.
-    public ZooKeeper connect(String host) throws IOException,InterruptedException {
+    /**
+     * Constructor
+     * @param host hostname or IP where zookeeper ensemble is running
+     */
+    public ZooKeeperConnection(String host) {
+        this.host = host;
+    }
 
-        zoo = new ZooKeeper(host,5000,new Watcher() {
-            public void process(WatchedEvent we) {
+    /**
+     * Method to connect zookeeper ensemble.
+     * @return ZooKeeper the instance of [ZooKeeper]
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public ZooKeeper connect() throws IOException,InterruptedException {
 
-                if (we.getState() == KeeperState.SyncConnected) {
-                    connectedSignal.countDown();
-                }
+        zoo = new ZooKeeper(this.host,5000, we -> {
+
+            if (we.getState() == KeeperState.SyncConnected) {
+                connectedSignal.countDown();
             }
         });
 
@@ -33,8 +41,29 @@ public class ZooKeeperConnection {
         return zoo;
     }
 
-    // Method to disconnect from zookeeper server
+    /**
+     * Disconnects the current instance on this class from zookeeper server
+     * @throws InterruptedException
+     */
     public void close() throws InterruptedException {
         zoo.close();
+    }
+
+    public static class Builder {
+        String host;
+
+        public Builder host(String host) {
+            this.host = host;
+            return this;
+        }
+
+            public ZooKeeperConnection build() {
+            if(host == null || host.isEmpty()) {
+                throw new NullPointerException("Host can't be null");
+            }
+            ZooKeeperConnection connection = new ZooKeeperConnection(this.host);
+            return connection;
+        }
+
     }
 }

@@ -7,8 +7,8 @@ import java.util.*;
 
 @Service
 public class UrlServiceImpl implements UrlService {
-    private static long counter = 100000000000L;
 
+    private static long counter = 100000000000L;
     private final UrlRepository urlRepository;
 
     public UrlServiceImpl(UrlRepository urlRepository){

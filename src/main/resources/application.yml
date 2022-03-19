@@ -11,6 +11,7 @@ spring:
       password: password
       local-datacenter: datacenter1
 
-  cloud:
-    zookeeper:
-      connect-string: localhost:2181
+zookeeper:
+  host: 127.0.0.1
+  port: 2181
+

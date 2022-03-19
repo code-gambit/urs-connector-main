@@ -104,6 +104,7 @@ class ZooKeeperClient(
     companion object: ZooKeeperTask {
         var zk: ZooKeeper? = null
         private var conn: ZooKeeperConnection? = null
+        private var logger = LoggerFactory.getLogger(javaClass)
 
         /**
          * checks if znode exists or not

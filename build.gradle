@@ -2,9 +2,9 @@ plugins {
 	id "org.springframework.boot" version "2.6.4"
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
-	id 'com.palantir.docker' version '0.22.1'
     id 'org.jetbrains.kotlin.jvm' version '1.6.20-RC'
-
+	id 'org.jetbrains.kotlin.plugin.jpa' version '1.3.21'
+	id 'org.jetbrains.kotlin.plugin.spring' version '1.3.21'
 }
 
 ext {
@@ -14,12 +14,6 @@ ext {
 repositories {
 	mavenCentral()
 }
-docker {
-	name "url-shortner"
-	dockerfile file('Dockerfile')
-	copySpec.from(jar).rename(".*","url-shortner.jar")
-	buildArgs(['JAR_FILE': "url-shortner.jar"])
-}
 
 compileJava {
 	sourceCompatibility=JavaVersion.VERSION_15
@@ -28,16 +22,19 @@ compileJava {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-cassandra'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.apache.zookeeper:zookeeper:3.8.0'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-tomcat', version: '1.2.1.RELEASE'
+	implementation 'org.springframework.boot:spring-boot-starter-tomcat:1.2.1.RELEASE'
     implementation 'org.projectlombok:lombok:1.18.20'
 	implementation 'org.springframework.boot:spring-boot-starter-parent:2.6.2'
 	implementation 'org.springframework.boot:spring-boot-starter:2.6.2'
 	implementation 'org.springframework:spring-core:5.3.13'
-	implementation group: 'com.datastax.cassandra', name: 'cassandra-driver-core', version: '3.6.0'
-	implementation group: 'javax.persistence', name: 'javax.persistence-api', version: '2.2'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+	implementation 'com.datastax.cassandra:cassandra-driver-core:3.6.0'
+	implementation 'javax.persistence:javax.persistence-api:2.2'
+	implementation 'com.h2database:h2:2.1.210'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+	implementation 'org.jetbrains.kotlin:kotlin-reflect:1.1.51'
 }
 
 

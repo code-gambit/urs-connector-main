@@ -1,4 +1,4 @@
-package com.urlshortner.urlshortner.Model;
+package com.urlshortner.urlshortner.model;
 
 /**
  * Generic class for passing the result of any operations.

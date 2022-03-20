@@ -19,12 +19,14 @@ import java.nio.charset.StandardCharsets
  * @param limit the range value or size of single limit
  */
 class ZooKeeperClient(
-        host: String,
-        private var limit: Int) {
+    host: String,
+    private var counterDataPath: String,
+    private var limit: Int) {
 
     private var logger = LoggerFactory.getLogger(javaClass)
     private var clientId: String? = null
     private var rangeStartVal = 0
+
 
     private fun setRangeStartVal(rangeStartVal: Int) {
         this.rangeStartVal = rangeStartVal
@@ -52,6 +54,11 @@ class ZooKeeperClient(
             conn = ZooKeeperConnection.Builder()
                     .host(host).build()
             zk = conn!!.connect()
+            exists(counterDataPath,false,zk!!) ?: zk!!.create(
+                "$counterDataPath",
+                "0".toByteArray(),
+                ZooDefs.Ids.OPEN_ACL_UNSAFE,
+                CreateMode.PERSISTENT)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -64,18 +71,15 @@ class ZooKeeperClient(
      */
     @Throws(InterruptedException::class, KeeperException::class)
     private fun testAndSet() {
-        val children = getChildren("/counter")
+        val children = getChildren(counterDataPath,false, zk!!)
         children.sort()
-        if (clientId == "/counter/" + children[0]) {
-            logger.info("######################################")
-            logger.info(clientId)
-            val data = getData("/counter")
-            val currRange = String(data).toInt()
+        if (clientId == "$counterDataPath/"+ children[0]) {
+            val data = getData(counterDataPath,false, null, zk!!)
+            val currRange = String(data,StandardCharsets.UTF_8).toInt()
             val updatedRange = (currRange + limit).toString().toByteArray(StandardCharsets.UTF_8)
-            setData("/counter", updatedRange)
+            setData(counterDataPath, updatedRange,zk!!)
             setRangeStartVal(currRange)
-            logger.info("######################################")
-            conn!!.close()
+            zk!!.close()
         } else {
             zk!!.register(testWatcher)
         }
@@ -90,14 +94,17 @@ class ZooKeeperClient(
     @get:Throws(InterruptedException::class, KeeperException::class, IOException::class)
     val rangeForClient: Int
         get() {
-            clientId = zk!!.create("/counter/client",
+            clientId = zk!!.create(
+                "$counterDataPath/client",
                     ByteArray(0),
                     ZooDefs.Ids.OPEN_ACL_UNSAFE,
                     CreateMode.EPHEMERAL_SEQUENTIAL)
             testAndSet()
+            val zk_temp=conn!!.connect()  // temporary connection to check existence
             while (true) {
-                znodeExists(clientId!!) ?: break
+                exists(clientId!!,false, zk_temp) ?: break
             }
+            zk_temp.close()
             return rangeStartVal
         }
 
@@ -106,36 +113,22 @@ class ZooKeeperClient(
         private var conn: ZooKeeperConnection? = null
         private var logger = LoggerFactory.getLogger(javaClass)
 
-        /**
-         * checks if znode exists or not
-         * @param path the znode path
-         * @return Stat
-         * @throws KeeperException
-         * @throws InterruptedException
-         */
-        @Throws(KeeperException::class, InterruptedException::class, IOException::class)
-        fun znodeExists(path: String): Stat? {
-            zk = conn!!.connect()
-            val result = exists(path, true)
-            conn!!.close()
-            return result
+
+        override fun getChildren(path: String, watch: Boolean,zookeeperInstance: ZooKeeper): MutableList<String> {
+            return zookeeperInstance.getChildren(path, watch)
         }
 
-        override fun getChildren(path: String, watch: Boolean): MutableList<String> {
-            return zk!!.getChildren(path, watch)
+        override fun getData(path: String, watch: Boolean, stat: Stat?,zookeeperInstance: ZooKeeper): ByteArray {
+            return zookeeperInstance.getData(path, watch, stat)
         }
 
-        override fun getData(path: String, watch: Boolean, stat: Stat?): ByteArray {
-            return zk!!.getData(path, watch, stat)
+        override fun setData(path: String, data: ByteArray,zookeeperInstance: ZooKeeper): Stat {
+            val version: Int? = exists(path,false,zookeeperInstance)?.version
+            return zookeeperInstance.setData(path, data, version!!)
         }
 
-        override fun setData(path: String, data: ByteArray): Stat {
-            val version: Int = exists(path).version
-            return zk!!.setData(path, data, version)
-        }
-
-        override fun exists(path: String, watch: Boolean): Stat {
-            return zk!!.exists(path, watch)
+        override fun exists(path: String, watch: Boolean,zookeeperInstance: ZooKeeper): Stat? {
+            return zookeeperInstance.exists(path, watch)
         }
     }
 }

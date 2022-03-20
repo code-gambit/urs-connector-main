@@ -22,7 +22,7 @@ class RangeServiceImpl(private val counterRepository: CounterRepository): RangeS
     @Value("\${zookeeper.host}:\${zookeeper.port}")
     private val host: String? = null
 
-    @Value("\${zookeeper.counterDataPath}")
+    @Value("\${zookeeper.znode.path.counter}")
     private val counterDataPath: String? = null
 
     @Value("\${zookeeper.range.limit}")

@@ -1,5 +1,5 @@
 server:
-  port: 3306
+  port: 8080
 
 spring:
   data:
@@ -24,7 +24,9 @@ spring:
 zookeeper:
   host: 127.0.0.1
   port: 2181
-  counterDataPath: /counter
+  znode:
+    path:
+      counter: /counter
   range:
-    limit: 10
+    limit: 1000
 

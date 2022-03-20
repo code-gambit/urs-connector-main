@@ -20,15 +20,13 @@ spring:
   h2:
     console:
       enabled: true
-    datasource:
-      url: jdbc:h2:mem:mtd
-      username: root
-      password: admin
-      driver-class-name: org.h2.Driver
-    jpa:
-      database-platform: org.hibernate.dialect.H2Dialect
 
 zookeeper:
   host: 127.0.0.1
   port: 2181
+  znode:
+    path:
+      counter: /counter
+  range:
+    limit: 1000
 

@@ -9,7 +9,7 @@ interface RangeService {
      * @return [CounterOperationResult.FAILURE] or [CounterOperationResult.SUCCESS] respectively
      */
 
-    fun insertCounterRange(): CounterOperationResult<Unit>
+    fun getAndInsertCounterRange(): CounterOperationResult<Unit>
 
     /**
      * Fetches the current counter value from zookeeper.
@@ -20,9 +20,7 @@ interface RangeService {
     /**
      * Resets the counter value in db.
      * This method should be used once the range is exhausted.
-     * @param lowerLimit start limit of the range ex: 900000001
-     * @param upperLimit end limit of the range ex: 1000000000
      * @return [CounterOperationResult.FAILURE] or [CounterOperationResult.SUCCESS] respectively
      */
-    fun resetCounter(): CounterOperationResult<Unit>
+    fun getAndResetCounter(): CounterOperationResult<Unit>
 }

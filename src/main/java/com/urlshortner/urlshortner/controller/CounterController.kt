@@ -20,7 +20,7 @@ class CounterController {
 
     @GetMapping("")
     fun test(): String? {
-        val result = rangeService!!.insertCounterRange()
+        val result = rangeService!!.getAndInsertCounterRange()
         return if (result is CounterOperationResult.Failure) {
             result.reason
         } else "Success"
@@ -44,7 +44,7 @@ class CounterController {
 
     @GetMapping("reset")
     fun resetCounterValue(): String? {
-        val result = rangeService!!.resetCounter()
+        val result = rangeService!!.getAndResetCounter()
         return if (result is CounterOperationResult.Failure) {
             result.reason
         } else "Success"

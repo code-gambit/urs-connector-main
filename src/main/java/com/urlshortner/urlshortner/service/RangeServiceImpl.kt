@@ -1,6 +1,6 @@
 package com.urlshortner.urlshortner.service
 
-import com.urlshortner.urlshortner.model.Counter
+
 import com.urlshortner.urlshortner.model.CounterOperationResult
 import com.urlshortner.urlshortner.repository.CounterRepository
 import com.urlshortner.zooKeeper.ZooKeeperClient
@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.io.IOException
 import javax.annotation.PostConstruct
-import kotlin.Exception
 
 @Service
 class RangeServiceImpl(private val counterRepository: CounterRepository): RangeService {
@@ -42,22 +41,9 @@ class RangeServiceImpl(private val counterRepository: CounterRepository): RangeS
         logger.info("\nZooKeeperClient object created\n")
     }
 
-    override fun insertCounterRange(): CounterOperationResult<Unit> {
-        if (counterRepository.existsById(Counter.ID)) {
-            // making sure counter is inserted only once in a db
-            return CounterOperationResult.Failure(
-                "Counter already in the db. Use reset function for updating the range")
-        }
-        return try {
-            val rangeStart= counterPathValue()
-            val counter = Counter(rangeStart, rangeStart+limit!!)
-            counterRepository.save(counter)
-            CounterOperationResult.Success(Unit)
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-            CounterOperationResult.Failure(
-                e.localizedMessage)
-        }
+    override fun getAndInsertCounterRange(): CounterOperationResult<Unit> {
+        val lowerLimit = counterPathValue();
+        return counterService!!.insertCounterRange(lowerLimit, lowerLimit + limit!!)
     }
 
     override fun counterPathValue(): Long{
@@ -67,19 +53,9 @@ class RangeServiceImpl(private val counterRepository: CounterRepository): RangeS
         return range
     }
 
-    override fun resetCounter(): CounterOperationResult<Unit> {
+    override fun getAndResetCounter(): CounterOperationResult<Unit> {
         val lowerLimit=counterPathValue()
-        val counter = Counter(lowerLimit,lowerLimit+limit!!)
-        return updateCounter(counter)
+        return counterService!!.resetCounter(lowerLimit,lowerLimit+limit!!)
     }
 
-    private fun updateCounter(counter: Counter): CounterOperationResult<Unit> {
-        return try {
-            counterRepository.save(counter)
-            CounterOperationResult.Success(Unit)
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-            CounterOperationResult.Failure(e.localizedMessage)
-        }
-    }
 }

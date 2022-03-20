@@ -26,5 +26,5 @@ zookeeper:
   port: 2181
   counterDataPath: /counter
   range:
-    limit: 1000
+    limit: 10
 

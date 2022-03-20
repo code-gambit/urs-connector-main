@@ -12,23 +12,23 @@ import java.util.*
 @Service
 class CounterServiceImpl(private val counterRepository: CounterRepository) : CounterService {
 
-    override fun insertCounterRange(lowerLimit: Long, upperLimit: Long): CounterOperationResult<Unit> {
-        if (counterRepository.existsById(Counter.ID)) {
-            // making sure counter is inserted only once in a db
-            return CounterOperationResult.Failure(
-                "Counter already in the db. Use reset function for updating the range")
-        }
-
-        return try {
-            val counter = Counter(lowerLimit, upperLimit)
-            counterRepository.save(counter)
-            CounterOperationResult.Success(Unit)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            CounterOperationResult.Failure(
-                e.localizedMessage)
-        }
-    }
+//    override fun insertCounterRange(lowerLimit: Long, upperLimit: Long): CounterOperationResult<Unit> {
+//        if (counterRepository.existsById(Counter.ID)) {
+//            // making sure counter is inserted only once in a db
+//            return CounterOperationResult.Failure(
+//                "Counter already in the db. Use reset function for updating the range")
+//        }
+//
+//        return try {
+//            val counter = Counter(lowerLimit, upperLimit)
+//            counterRepository.save(counter)
+//            CounterOperationResult.Success(Unit)
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//            CounterOperationResult.Failure(
+//                e.localizedMessage)
+//        }
+//    }
 
     override val counterValue: CounterOperationResult<Long>
         get() {
@@ -49,11 +49,11 @@ class CounterServiceImpl(private val counterRepository: CounterRepository) : Cou
                 CounterOperationResult.Failure(e.localizedMessage)
             }
         }
-
-    override fun resetCounter(lowerLimit: Long, upperLimit: Long): CounterOperationResult<Unit> {
-        val counter = Counter(lowerLimit,upperLimit)
-        return updateCounter(counter)
-    }
+//
+//    override fun resetCounter(lowerLimit: Long, upperLimit: Long): CounterOperationResult<Unit> {
+//        val counter = Counter(lowerLimit,upperLimit)
+//        return updateCounter(counter)
+//    }
 
     private val counter: Counter?
         get() {

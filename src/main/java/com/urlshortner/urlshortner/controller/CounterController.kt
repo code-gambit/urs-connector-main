@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.beans.factory.annotation.Autowired
 import com.urlshortner.urlshortner.service.CounterService
+import com.urlshortner.urlshortner.service.RangeService
 import org.springframework.web.bind.annotation.GetMapping
 
 @RestController
@@ -14,9 +15,12 @@ class CounterController {
     @Autowired
     var counterService: CounterService? = null
 
+    @Autowired
+    var rangeService: RangeService? =null
+
     @GetMapping("")
     fun test(): String? {
-        val result = counterService!!.insertCounterRange(1, 5)
+        val result = rangeService!!.insertCounterRange()
         return if (result is CounterOperationResult.Failure) {
             result.reason
         } else "Success"
@@ -40,7 +44,7 @@ class CounterController {
 
     @GetMapping("reset")
     fun resetCounterValue(): String? {
-        val result = counterService!!.resetCounter(6, 10)
+        val result = rangeService!!.resetCounter()
         return if (result is CounterOperationResult.Failure) {
             result.reason
         } else "Success"

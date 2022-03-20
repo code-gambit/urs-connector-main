@@ -1,6 +1,6 @@
 package com.urlshortner.urlshortner.service
 
-import com.urlshortner.urlshortner.model.OperationResult
+import com.urlshortner.urlshortner.model.CounterOperationResult
 
 interface CounterService {
     /**
@@ -10,14 +10,14 @@ interface CounterService {
      * @param upperLimit end limit of the range ex: 900000000
      * @return [CounterOperationResult.FAILURE] or [CounterOperationResult.SUCCESS] respectively
      */
-    fun insertCounterRange(lowerLimit: Long, upperLimit: Long): OperationResult<Void?, String?>?
+    fun insertCounterRange(lowerLimit: Long, upperLimit: Long): CounterOperationResult<Unit>
 
     /**
      * Fetches the current counter value from db and updates the db.
      * This method only returns value when entire transaction is success else null
      * @return [Long] counter value to be used
      */
-    val counterValue: OperationResult<Long?, String?>?
+    val counterValue: CounterOperationResult<Long>
 
     /**
      * Resets the counter value in db.
@@ -26,5 +26,5 @@ interface CounterService {
      * @param upperLimit end limit of the range ex: 1000000000
      * @return [CounterOperationResult.FAILURE] or [CounterOperationResult.SUCCESS] respectively
      */
-    fun resetCounter(lowerLimit: Long, upperLimit: Long): OperationResult<Void?, String?>?
+    fun resetCounter(lowerLimit: Long, upperLimit: Long): CounterOperationResult<Unit>
 }

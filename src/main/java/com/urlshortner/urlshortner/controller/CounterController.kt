@@ -1,5 +1,6 @@
 package com.urlshortner.urlshortner.controller
 
+import com.urlshortner.urlshortner.model.CounterOperationResult
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,28 +17,32 @@ class CounterController {
     @GetMapping("")
     fun test(): String? {
         val result = counterService!!.insertCounterRange(1, 5)
-        return if (result!!.isFailed) {
-            result.failureData
+        return if (result is CounterOperationResult.Failure) {
+            result.reason
         } else "Success"
     }
 
     @get:GetMapping("get")
     val counterValue: String?
         get() {
-            val result = counterService!!.counterValue
-            if (result!!.isFailed) {
-                return result.failureData
-            } else if (result.isRangeExhausted) {
-                return "Reset: " + resetCounterValue()
+            return when (val result = counterService!!.counterValue) {
+                is CounterOperationResult.Failure -> {
+                    result.reason
+                }
+                is CounterOperationResult.RangeExhausted -> {
+                    "Reset: " + resetCounterValue()
+                }
+                else -> {
+                    "Counter Value: " + (result as CounterOperationResult.Success).data
+                }
             }
-            return "Counter Value: " + result.successData
         }
 
     @GetMapping("reset")
     fun resetCounterValue(): String? {
         val result = counterService!!.resetCounter(6, 10)
-        return if (result!!.isFailed) {
-            result.failureData
+        return if (result is CounterOperationResult.Failure) {
+            result.reason
         } else "Success"
     }
 }

@@ -1,21 +1,20 @@
 package com.urlshortner.urlshortner.service
 
-
 import com.urlshortner.urlshortner.model.CounterOperationResult
 import com.urlshortner.urlshortner.repository.CounterRepository
 import com.urlshortner.zooKeeper.ZooKeeperClient
-import kotlin.Throws
-import java.lang.InterruptedException
 import org.apache.zookeeper.KeeperException
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.io.IOException
+import java.lang.InterruptedException
 import javax.annotation.PostConstruct
+import kotlin.Throws
 
 @Service
-class RangeServiceImpl(private val counterRepository: CounterRepository): RangeService {
+class RangeServiceImpl(private val counterRepository: CounterRepository) : RangeService {
 
     private var logger = LoggerFactory.getLogger(javaClass)
 
@@ -38,7 +37,7 @@ class RangeServiceImpl(private val counterRepository: CounterRepository): RangeS
     private fun job() {
         client = ZooKeeperClient(host!!, counterDataPath!!, limit!!)
         val result = fetchAndInsertCounterRange()
-        if(result is CounterOperationResult.Success ) {
+        if (result is CounterOperationResult.Success) {
             logger.info("Range initialisation success")
         } else {
             logger.info("Range initialisation failure: " + (result as CounterOperationResult.Failure).reason)
@@ -46,11 +45,11 @@ class RangeServiceImpl(private val counterRepository: CounterRepository): RangeS
     }
 
     override fun fetchAndInsertCounterRange(): CounterOperationResult<Unit> {
-        val lowerLimit = counterPathValue();
+        val lowerLimit = counterPathValue()
         return counterService!!.insertCounterRange(lowerLimit, lowerLimit + limit!!)
     }
 
-    override fun counterPathValue(): Long{
+    override fun counterPathValue(): Long {
         client = ZooKeeperClient(host!!, counterDataPath!!, limit!!)
         val range = client!!.rangeForClient.toLong()
         logger.info("\n\n Range : \n\n$range")
@@ -58,8 +57,7 @@ class RangeServiceImpl(private val counterRepository: CounterRepository): RangeS
     }
 
     override fun fetchAndResetCounter(): CounterOperationResult<Unit> {
-        val lowerLimit=counterPathValue()
-        return counterService!!.resetCounter(lowerLimit,lowerLimit+limit!!)
+        val lowerLimit = counterPathValue()
+        return counterService!!.resetCounter(lowerLimit, lowerLimit + limit!!)
     }
-
 }

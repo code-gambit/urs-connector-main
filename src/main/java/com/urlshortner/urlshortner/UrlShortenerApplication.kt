@@ -9,4 +9,3 @@ open class UrlShortenerApplication
 fun main(args: Array<String>) {
     runApplication<UrlShortenerApplication>(*args)
 }
-

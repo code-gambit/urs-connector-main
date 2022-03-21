@@ -11,6 +11,5 @@ interface ZooKeeperTask {
 
     fun setData(path: String, data: ByteArray, zookeeperInstance: ZooKeeper): Stat
 
-    fun exists(path: String, watch: Boolean = false, zookeeperInstance: ZooKeeper ): Stat?
-
+    fun exists(path: String, watch: Boolean = false, zookeeperInstance: ZooKeeper): Stat?
 }

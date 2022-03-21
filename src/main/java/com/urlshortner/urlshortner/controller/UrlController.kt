@@ -1,14 +1,14 @@
 package com.urlshortner.urlshortner.controller
 
-import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.bind.annotation.RequestMapping
 import com.urlshortner.urlshortner.service.UrlService
 import org.slf4j.LoggerFactory
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import java.util.HashMap
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
+import java.util.HashMap
 
 @RestController
 @RequestMapping(path = ["api/v1/url"])
@@ -39,7 +39,7 @@ class UrlController(private val urlService: UrlService) {
         val shortId = body["url"]?.let { urlService.createShortUrlFromLongUrl(it) }
         val response: MutableMap<String, String?> = HashMap()
         response["id"] = shortId
-        return response //url is the long url for which will get short url
+        return response // url is the long url for which will get short url
     }
 
     /**
@@ -57,7 +57,7 @@ class UrlController(private val urlService: UrlService) {
      */
     @GetMapping(path = ["/{shortUrl}"])
     fun getLongUrlFromShortUrl(@PathVariable("shortUrl") shortUrl: String): Map<String, String?> {
-        logger.info("Shourt url: "+shortUrl)
+        logger.info("Shourt url: " + shortUrl)
         val response: MutableMap<String, String?> = HashMap()
         val url = urlService.getLongUrlFromShortUrl(shortUrl)
         response["url"] = url

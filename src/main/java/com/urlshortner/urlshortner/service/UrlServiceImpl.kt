@@ -1,7 +1,7 @@
 package com.urlshortner.urlshortner.service
 
-import com.urlshortner.urlshortner.repository.UrlRepository
 import com.urlshortner.urlshortner.model.UrlModel
+import com.urlshortner.urlshortner.repository.UrlRepository
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
@@ -20,7 +20,7 @@ class UrlServiceImpl(private val urlRepository: UrlRepository) : UrlService {
         val url = urlRepository.findByLongUrl(longUrl)
         if (url!!.isEmpty()) {
             shortUrlId = "1L9zO9O" // TODO call the bse62 convertor here
-            val urlModel = UrlModel(shortUrlId,longUrl)
+            val urlModel = UrlModel(shortUrlId, longUrl)
             urlRepository.save(urlModel)
         } else {
             shortUrlId = url[0]!!.shortUrl
@@ -36,9 +36,9 @@ class UrlServiceImpl(private val urlRepository: UrlRepository) : UrlService {
     override fun getLongUrlFromShortUrl(shortUrl: String): String? {
         logger.info("Short :" + shortUrl)
         val longUrl: String?
-        val a = urlRepository.findAll();
+        val a = urlRepository.findAll()
         val urlModelList = urlRepository.findByShortUrl(shortUrl)
-        logger.info("List :" + urlModelList);
+        logger.info("List :" + urlModelList)
         longUrl = if (urlModelList!!.isEmpty()) {
             null
         } else {

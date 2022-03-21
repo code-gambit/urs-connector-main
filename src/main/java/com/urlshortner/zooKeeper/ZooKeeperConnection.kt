@@ -1,13 +1,13 @@
 package com.urlshortner.zooKeeper
 
-import org.apache.zookeeper.ZooKeeper
-import java.util.concurrent.CountDownLatch
-import kotlin.Throws
-import java.io.IOException
-import java.lang.InterruptedException
 import org.apache.zookeeper.WatchedEvent
 import org.apache.zookeeper.Watcher.Event.KeeperState
+import org.apache.zookeeper.ZooKeeper
+import java.io.IOException
+import java.lang.InterruptedException
 import java.lang.NullPointerException
+import java.util.concurrent.CountDownLatch
+import kotlin.Throws
 
 /**
  * Public class for managing ZooKeeper connection

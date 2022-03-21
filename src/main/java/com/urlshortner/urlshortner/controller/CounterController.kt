@@ -1,12 +1,12 @@
 package com.urlshortner.urlshortner.controller
 
 import com.urlshortner.urlshortner.model.CounterOperationResult
-import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.beans.factory.annotation.Autowired
 import com.urlshortner.urlshortner.service.CounterService
 import com.urlshortner.urlshortner.service.RangeService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping(path = ["test"])
@@ -16,7 +16,7 @@ class CounterController {
     var counterService: CounterService? = null
 
     @Autowired
-    var rangeService: RangeService? =null
+    var rangeService: RangeService? = null
 
     @get:GetMapping("get")
     val counterValue: String?

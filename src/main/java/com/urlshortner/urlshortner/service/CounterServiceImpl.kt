@@ -1,13 +1,13 @@
 package com.urlshortner.urlshortner.service
 
-import com.urlshortner.urlshortner.repository.CounterRepository
 import com.urlshortner.urlshortner.exception.RangeExhaustedException
 import com.urlshortner.urlshortner.model.Counter
 import com.urlshortner.urlshortner.model.CounterOperationResult
+import com.urlshortner.urlshortner.repository.CounterRepository
 import org.springframework.stereotype.Service
 import java.lang.Exception
 import java.lang.NullPointerException
-import java.util.*
+import java.util.Optional
 
 @Service
 class CounterServiceImpl(private val counterRepository: CounterRepository) : CounterService {
@@ -16,7 +16,8 @@ class CounterServiceImpl(private val counterRepository: CounterRepository) : Cou
         if (counterRepository.existsById(Counter.ID)) {
             // making sure counter is inserted only once in a db
             return CounterOperationResult.Failure(
-                "Counter already in the db. Use reset function for updating the range")
+                "Counter already in the db. Use reset function for updating the range"
+            )
         }
 
         return try {
@@ -26,7 +27,8 @@ class CounterServiceImpl(private val counterRepository: CounterRepository) : Cou
         } catch (e: Exception) {
             e.printStackTrace()
             CounterOperationResult.Failure(
-                e.localizedMessage)
+                e.localizedMessage
+            )
         }
     }
 
@@ -39,7 +41,8 @@ class CounterServiceImpl(private val counterRepository: CounterRepository) : Cou
                 val result = updateCounter(counter)
                 if (result is CounterOperationResult.Failure) {
                     CounterOperationResult.Failure(
-                        "Not able to update counter value in db")
+                        "Not able to update counter value in db"
+                    )
                 }
                 CounterOperationResult.Success(value)
             } catch (rangeExhaustedException: RangeExhaustedException) {
@@ -51,7 +54,7 @@ class CounterServiceImpl(private val counterRepository: CounterRepository) : Cou
         }
 
     override fun resetCounter(lowerLimit: Long, upperLimit: Long): CounterOperationResult<Unit> {
-        val counter = Counter(lowerLimit,upperLimit)
+        val counter = Counter(lowerLimit, upperLimit)
         return updateCounter(counter)
     }
 

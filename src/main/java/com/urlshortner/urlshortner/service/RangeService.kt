@@ -3,13 +3,13 @@ package com.urlshortner.urlshortner.service
 import com.urlshortner.urlshortner.model.CounterOperationResult
 
 interface RangeService {
+
     /**
      * Adds the counter value in db.
      * This method should be used when the service starts and gets the range for first time
      * @return [CounterOperationResult.FAILURE] or [CounterOperationResult.SUCCESS] respectively
      */
-
-    fun getAndInsertCounterRange(): CounterOperationResult<Unit>
+    fun fetchAndInsertCounterRange(): CounterOperationResult<Unit>
 
     /**
      * Fetches the current counter value from zookeeper.
@@ -22,5 +22,5 @@ interface RangeService {
      * This method should be used once the range is exhausted.
      * @return [CounterOperationResult.FAILURE] or [CounterOperationResult.SUCCESS] respectively
      */
-    fun getAndResetCounter(): CounterOperationResult<Unit>
+    fun fetchAndResetCounter(): CounterOperationResult<Unit>
 }

@@ -36,12 +36,16 @@ class RangeServiceImpl(private val counterRepository: CounterRepository): RangeS
     @Throws(InterruptedException::class, KeeperException::class, IOException::class)
     @PostConstruct
     private fun job() {
-        logger.info("Host: $host")
         client = ZooKeeperClient(host!!, counterDataPath!!, limit!!)
-        logger.info("\nZooKeeperClient object created\n")
+        val result = fetchAndInsertCounterRange()
+        if(result is CounterOperationResult.Success ) {
+            logger.info("Range initialisation success")
+        } else {
+            logger.info("Range initialisation failure: " + (result as CounterOperationResult.Failure).reason)
+        }
     }
 
-    override fun getAndInsertCounterRange(): CounterOperationResult<Unit> {
+    override fun fetchAndInsertCounterRange(): CounterOperationResult<Unit> {
         val lowerLimit = counterPathValue();
         return counterService!!.insertCounterRange(lowerLimit, lowerLimit + limit!!)
     }
@@ -53,7 +57,7 @@ class RangeServiceImpl(private val counterRepository: CounterRepository): RangeS
         return range
     }
 
-    override fun getAndResetCounter(): CounterOperationResult<Unit> {
+    override fun fetchAndResetCounter(): CounterOperationResult<Unit> {
         val lowerLimit=counterPathValue()
         return counterService!!.resetCounter(lowerLimit,lowerLimit+limit!!)
     }

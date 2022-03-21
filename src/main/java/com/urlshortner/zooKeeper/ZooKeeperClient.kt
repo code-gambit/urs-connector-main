@@ -55,7 +55,7 @@ class ZooKeeperClient(
                 .host(host).build()
             zk = conn!!.connect()
             exists(counterDataPath, false, zk!!) ?: zk!!.create(
-                "$counterDataPath",
+                counterDataPath,
                 "0".toByteArray(),
                 ZooDefs.Ids.OPEN_ACL_UNSAFE,
                 CreateMode.PERSISTENT

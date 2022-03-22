@@ -18,16 +18,11 @@ class RangeServiceImpl : RangeService {
 
     private var logger = LoggerFactory.getLogger(javaClass)
 
-    @Value("\${zookeeper.host}:\${zookeeper.port}")
-    private val host: String? = null
-
-    @Value("\${zookeeper.znode.path.counter}")
-    private val counterDataPath: String? = null
-
     @Value("\${zookeeper.range.limit}")
-    private val limit: Int? = null
+    private var limit: Int = 0
 
-    private lateinit var client: ZooKeeperClient
+    @Autowired
+    lateinit var client: ZooKeeperClient
 
     @Autowired
     lateinit var counterService: CounterService
@@ -35,7 +30,6 @@ class RangeServiceImpl : RangeService {
     @Throws(InterruptedException::class, KeeperException::class, IOException::class)
     @PostConstruct
     private fun job() {
-        client = ZooKeeperClient(host!!, counterDataPath!!, limit!!)
         when (val result = fetchAndInsertCounterRange()) {
             is OperationResult.Failure -> logger.info("Range initialisation failure: " + result.reason)
             is OperationResult.Success -> logger.info("Range initialisation success")
@@ -44,7 +38,7 @@ class RangeServiceImpl : RangeService {
 
     override fun fetchAndInsertCounterRange(): OperationResult<Unit> {
         val lowerLimit = fetchRange()
-        return when (val counterResult = counterService.insertCounterRange(lowerLimit, lowerLimit + limit!!)) {
+        return when (val counterResult = counterService.insertCounterRange(lowerLimit, lowerLimit + limit)) {
             is CounterOperationResult.Success -> {
                 OperationResult.Success(Unit)
             }
@@ -58,7 +52,6 @@ class RangeServiceImpl : RangeService {
     }
 
     override fun fetchRange(): Long {
-        client = ZooKeeperClient(host!!, counterDataPath!!, limit!!)
         val range = client.rangeForClient.toLong()
         logger.info("\n\n Range : \n\n$range")
         return range
@@ -66,7 +59,7 @@ class RangeServiceImpl : RangeService {
 
     override fun fetchAndResetCounter(): OperationResult<Unit> {
         val lowerLimit = fetchRange()
-        return when (val counterResult = counterService.resetCounter(lowerLimit, lowerLimit + limit!!)) {
+        return when (val counterResult = counterService.resetCounter(lowerLimit, lowerLimit + limit)) {
             is CounterOperationResult.Success -> OperationResult.Success(Unit)
             is CounterOperationResult.Failure -> OperationResult.Failure(counterResult.reason)
             CounterOperationResult.RangeExhausted -> OperationResult.Failure("Emergency this should not be displayed")

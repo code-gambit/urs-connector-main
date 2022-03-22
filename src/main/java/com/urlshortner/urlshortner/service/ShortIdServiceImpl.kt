@@ -2,7 +2,7 @@ package com.urlshortner.urlshortner.service
 
 import com.urlshortner.urlshortner.model.CounterOperationResult
 import com.urlshortner.urlshortner.model.OperationResult
-import com.urlshortner.urlshortner.utility.UrlUtils
+import com.urlshortner.urlshortner.utility.ExtensionFunction.toBase62
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -31,7 +31,7 @@ class ShortIdServiceImpl : ShortIdService {
                 }
             }
             is CounterOperationResult.Success -> {
-                val shortId = UrlUtils.base62Encode(result.data)
+                val shortId = result.data.toBase62()
                 OperationResult.Success(shortId)
             }
         }

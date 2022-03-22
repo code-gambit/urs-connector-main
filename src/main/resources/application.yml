@@ -26,5 +26,5 @@ zookeeper:
     path:
       counter: /counter
   range:
-    limit: 1000
+    limit: 5
 

@@ -2,7 +2,6 @@ package com.urlshortner.urlshortner
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
-import org.springframework.context.annotation.ComponentScan
 
 @SpringBootApplication(scanBasePackages = ["com.urlshortner.zooKeeper", "com.urlshortner.urlshortner" ])
 class UrlShortenerApplication

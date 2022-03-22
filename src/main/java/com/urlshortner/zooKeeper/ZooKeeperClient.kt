@@ -22,7 +22,7 @@ import kotlin.Throws
  * @param limit the range value or size of single limit
  */
 @Service
-class ZooKeeperClient (
+class ZooKeeperClient(
     @Value("\${zookeeper.host}:\${zookeeper.port}")
     host: String,
 

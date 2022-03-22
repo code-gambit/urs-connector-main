@@ -7,6 +7,8 @@ spring:
       keyspace-name: urlspace
       contact-points: 127.0.0.1
       port: 9042
+      username: admin
+      password: password
       local-datacenter: datacenter1
       schema-action: create_if_not_exists
 
@@ -26,5 +28,5 @@ zookeeper:
     path:
       counter: /counter
   range:
-    limit: 5
+    limit: 1000
 

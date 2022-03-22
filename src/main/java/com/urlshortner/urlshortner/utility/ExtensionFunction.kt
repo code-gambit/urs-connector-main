@@ -2,7 +2,7 @@ package com.urlshortner.urlshortner.utility
 
 import java.util.ArrayList
 
-object UrlUtils {
+object ExtensionFunction {
     var ALPHABET = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
     var BASE = ALPHABET.length
 
@@ -16,7 +16,7 @@ object UrlUtils {
      * @param counter
      * @return BASE62 encoded string of [counter]
      */
-    fun base62Encode(counter: Long): String {
+    private fun base62Encode(counter: Long): String {
         var counter = counter
         if (counter == 0L) {
             return ALPHABET[0].toString()
@@ -29,5 +29,9 @@ object UrlUtils {
         }
         arr.reverse()
         return java.lang.String.join("", arr)
+    }
+
+    fun Long.toBase62(): String {
+        return base62Encode(this)
     }
 }

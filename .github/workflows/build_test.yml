@@ -13,5 +13,8 @@ jobs:
         with:
           java-version: 15
 
+      - name: Ktlint Check
+        run: ./gradlew ktlintCheck
+
       - name: Build
         run: ./gradlew bootJar

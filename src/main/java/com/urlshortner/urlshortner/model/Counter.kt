@@ -7,14 +7,14 @@ import javax.persistence.Id
 
 @Entity(name = "COUNTER")
 open class Counter(
-        @Column(name = "LOWER_LIMIT")
-        open var lowerLimit: Long,
+    @Column(name = "LOWER_LIMIT")
+    open var lowerLimit: Long,
 
-        @Column(name = "UPPER_LIMIT")
-        open var upperLimit: Long,
+    @Column(name = "UPPER_LIMIT")
+    open var upperLimit: Long,
 
-        @Id
-        open val id: Int = ID
+    @Id
+    open val id: Int = ID
 ) {
 
     @Column(name = "CURRENT_VALUE")

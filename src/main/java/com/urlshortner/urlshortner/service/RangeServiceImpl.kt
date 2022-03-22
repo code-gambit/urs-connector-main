@@ -1,21 +1,20 @@
 package com.urlshortner.urlshortner.service
 
-
 import com.urlshortner.urlshortner.model.CounterOperationResult
-import com.urlshortner.urlshortner.repository.CounterRepository
+import com.urlshortner.urlshortner.model.OperationResult
 import com.urlshortner.zooKeeper.ZooKeeperClient
-import kotlin.Throws
-import java.lang.InterruptedException
 import org.apache.zookeeper.KeeperException
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.io.IOException
+import java.lang.InterruptedException
 import javax.annotation.PostConstruct
+import kotlin.Throws
 
 @Service
-class RangeServiceImpl(private val counterRepository: CounterRepository): RangeService {
+class RangeServiceImpl : RangeService {
 
     private var logger = LoggerFactory.getLogger(javaClass)
 
@@ -28,34 +27,49 @@ class RangeServiceImpl(private val counterRepository: CounterRepository): RangeS
     @Value("\${zookeeper.range.limit}")
     private val limit: Int? = null
 
-    private var client: ZooKeeperClient? = null
+    private lateinit var client: ZooKeeperClient
 
     @Autowired
-    var counterService: CounterService? = null
+    lateinit var counterService: CounterService
 
     @Throws(InterruptedException::class, KeeperException::class, IOException::class)
     @PostConstruct
     private fun job() {
-        logger.info("Host: $host")
         client = ZooKeeperClient(host!!, counterDataPath!!, limit!!)
-        logger.info("\nZooKeeperClient object created\n")
+        when (val result = fetchAndInsertCounterRange()) {
+            is OperationResult.Failure -> logger.info("Range initialisation failure: " + result.reason)
+            is OperationResult.Success -> logger.info("Range initialisation success")
+        }
     }
 
-    override fun getAndInsertCounterRange(): CounterOperationResult<Unit> {
-        val lowerLimit = counterPathValue();
-        return counterService!!.insertCounterRange(lowerLimit, lowerLimit + limit!!)
+    override fun fetchAndInsertCounterRange(): OperationResult<Unit> {
+        val lowerLimit = fetchRange()
+        return when (val counterResult = counterService.insertCounterRange(lowerLimit, lowerLimit + limit!!)) {
+            is CounterOperationResult.Success -> {
+                OperationResult.Success(Unit)
+            }
+            is CounterOperationResult.Failure -> {
+                OperationResult.Failure(counterResult.reason)
+            }
+            else -> {
+                OperationResult.Failure("Emergency this should not be displayed")
+            }
+        }
     }
 
-    override fun counterPathValue(): Long{
+    override fun fetchRange(): Long {
         client = ZooKeeperClient(host!!, counterDataPath!!, limit!!)
-        val range = client!!.rangeForClient.toLong()
+        val range = client.rangeForClient.toLong()
         logger.info("\n\n Range : \n\n$range")
         return range
     }
 
-    override fun getAndResetCounter(): CounterOperationResult<Unit> {
-        val lowerLimit=counterPathValue()
-        return counterService!!.resetCounter(lowerLimit,lowerLimit+limit!!)
+    override fun fetchAndResetCounter(): OperationResult<Unit> {
+        val lowerLimit = fetchRange()
+        return when (val counterResult = counterService.resetCounter(lowerLimit, lowerLimit + limit!!)) {
+            is CounterOperationResult.Success -> OperationResult.Success(Unit)
+            is CounterOperationResult.Failure -> OperationResult.Failure(counterResult.reason)
+            CounterOperationResult.RangeExhausted -> OperationResult.Failure("Emergency this should not be displayed")
+        }
     }
-
 }

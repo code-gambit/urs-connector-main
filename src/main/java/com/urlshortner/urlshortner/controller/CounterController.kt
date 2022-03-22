@@ -1,52 +1,25 @@
 package com.urlshortner.urlshortner.controller
 
-import com.urlshortner.urlshortner.model.CounterOperationResult
-import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.bind.annotation.RequestMapping
+import com.urlshortner.urlshortner.model.OperationResult
+import com.urlshortner.urlshortner.service.ShortIdService
 import org.springframework.beans.factory.annotation.Autowired
-import com.urlshortner.urlshortner.service.CounterService
-import com.urlshortner.urlshortner.service.RangeService
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping(path = ["test"])
 class CounterController {
 
     @Autowired
-    var counterService: CounterService? = null
-
-    @Autowired
-    var rangeService: RangeService? =null
-
-    @GetMapping("")
-    fun test(): String? {
-        val result = rangeService!!.getAndInsertCounterRange()
-        return if (result is CounterOperationResult.Failure) {
-            result.reason
-        } else "Success"
-    }
+    lateinit var shortIdService: ShortIdService
 
     @get:GetMapping("get")
     val counterValue: String?
         get() {
-            return when (val result = counterService!!.counterValue) {
-                is CounterOperationResult.Failure -> {
-                    result.reason
-                }
-                is CounterOperationResult.RangeExhausted -> {
-                    "Reset: " + resetCounterValue()
-                }
-                else -> {
-                    "Counter Value: " + (result as CounterOperationResult.Success).data
-                }
+            return when (val result = shortIdService.getShortId()) {
+                is OperationResult.Failure -> result.reason
+                is OperationResult.Success -> result.data
             }
         }
-
-    @GetMapping("reset")
-    fun resetCounterValue(): String? {
-        val result = rangeService!!.getAndResetCounter()
-        return if (result is CounterOperationResult.Failure) {
-            result.reason
-        } else "Success"
-    }
 }

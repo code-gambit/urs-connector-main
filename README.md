@@ -36,10 +36,10 @@ Once you are able to complete the above requirement setup. You can follow below 
     * Boot Application: `java -jar build/libs/url-shortner.jar `
 
 ## Contributing
-DISCLAIMER: Make sure not to force push untill unavoidable.
+DISCLAIMER: Make sure not to force push until unavoidable.
 1. Fork it
 2. Create your feature branch `(git checkout -b my-new-feature)`
 3. Commit your changes `(git commit -m 'Add some feature')`
-4. Clear the checks and make sure build is successfull
+4. Clear the checks and make sure below builds are successful
 5. Push your branch `(git push origin my-new-feature)`
 6. Create a new Pull Request.

@@ -1,8 +1,8 @@
 package com.urlshortner.urlshortner.repository
 
-import org.springframework.data.cassandra.repository.CassandraRepository
 import com.urlshortner.urlshortner.model.UrlModel
 import org.springframework.data.cassandra.repository.AllowFiltering
+import org.springframework.data.cassandra.repository.CassandraRepository
 import org.springframework.stereotype.Repository
 
 @Repository

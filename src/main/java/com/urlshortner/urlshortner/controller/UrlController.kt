@@ -57,7 +57,6 @@ class UrlController(private val urlService: UrlService) {
      */
     @GetMapping(path = ["/{shortUrl}"])
     fun getLongUrlFromShortUrl(@PathVariable("shortUrl") shortUrl: String): Map<String, String?> {
-        logger.info("Shourt url: " + shortUrl)
         val response: MutableMap<String, String?> = HashMap()
         val url = urlService.getLongUrlFromShortUrl(shortUrl)
         response["url"] = url

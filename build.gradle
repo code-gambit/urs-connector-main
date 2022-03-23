@@ -30,7 +30,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-parent:2.6.2'
 	implementation 'org.springframework.boot:spring-boot-starter:2.6.2'
 	implementation 'org.springframework:spring-core:5.3.13'
-	implementation 'com.datastax.cassandra:cassandra-driver-core:3.6.0'
+	implementation 'com.datastax.cassandra:cassandra-driver-core:3.11.0'
 	implementation 'javax.persistence:javax.persistence-api:2.2'
 	implementation 'com.h2database:h2:2.1.210'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'

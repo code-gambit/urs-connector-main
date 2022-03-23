@@ -1,14 +1,19 @@
 package com.urlshortner.urlshortner.service
 
+import com.urlshortner.urlshortner.model.OperationResult
 import com.urlshortner.urlshortner.model.UrlModel
 import com.urlshortner.urlshortner.repository.UrlRepository
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
 class UrlServiceImpl(private val urlRepository: UrlRepository) : UrlService {
 
     private var logger = LoggerFactory.getLogger(javaClass)
+
+    @Autowired
+    lateinit var shortIdService: ShortIdService
 
     /**
      * Generates the short url id and stores in db
@@ -18,9 +23,14 @@ class UrlServiceImpl(private val urlRepository: UrlRepository) : UrlService {
     override fun createShortUrlFromLongUrl(longUrl: String): String? {
         val shortUrlId: String
         val url = urlRepository.findByLongUrl(longUrl)
-        if (url!!.isEmpty()) {
-            shortUrlId = "1L9zO9O" // TODO call the bse62 convertor here
-            val urlModel = UrlModel(shortUrlId, longUrl)
+        if (url.isEmpty()) {
+            when (val result = shortIdService.getShortId()) {
+                is OperationResult.Failure -> return null
+                is OperationResult.Success -> {
+                    shortUrlId = result.data
+                }
+            }
+            val urlModel = UrlModel.getInstance(shortUrlId, longUrl)
             urlRepository.save(urlModel)
         } else {
             shortUrlId = url[0]!!.shortUrl
@@ -34,11 +44,8 @@ class UrlServiceImpl(private val urlRepository: UrlRepository) : UrlService {
      * @return long url corresponding to the [shortUrl] passed
      */
     override fun getLongUrlFromShortUrl(shortUrl: String): String? {
-        logger.info("Short :" + shortUrl)
         val longUrl: String?
-        val a = urlRepository.findAll()
         val urlModelList = urlRepository.findByShortUrl(shortUrl)
-        logger.info("List :" + urlModelList)
         longUrl = if (urlModelList!!.isEmpty()) {
             null
         } else {
